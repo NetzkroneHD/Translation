@@ -1,5 +1,6 @@
 package de.netzkronehd.translation;
 
+import de.netzkronehd.translation.args.Args;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.JoinConfiguration;
@@ -10,13 +11,21 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import java.util.Collection;
 import java.util.Iterator;
 
-import static net.kyori.adventure.text.Component.join;
-import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public interface Message {
 
-    static Component formatBoolean(boolean bool) {
+    static TextComponent toText(ComponentLike component) {
+        return text().append(component).build();
+    }
+
+    Args.Args0 NO_PERMISSION = () -> toText(translatable()
+            .key("")
+            .color(RED)
+    );
+
+    static TextComponent formatBoolean(boolean bool) {
         return bool ? text("true", GREEN) : text("false", RED);
     }
 
@@ -24,7 +33,7 @@ public interface Message {
         return join(JoinConfiguration.newlines(), components);
     }
 
-    static Component formatStringList(Collection<String> strings) {
+    static TextComponent formatStringList(Collection<String> strings) {
         final Iterator<String> it = strings.iterator();
         final TextComponent.Builder builder = text().color(DARK_AQUA).content(it.next());
 
@@ -53,11 +62,11 @@ public interface Message {
     }
 
     static Component formatContext(String key, String value) {
-        // "&3{}=&b{}"
+        // "&3{}&7=&b{}"
         return text()
                 .content(key)
                 .color(DARK_AQUA)
-                .append(text('='))
+                .append(text('=').color(GRAY))
                 .append(text(value, AQUA))
                 .build();
     }
