@@ -36,6 +36,10 @@ public interface Message {
         return builder.build();
     }
 
+    static String serializeLegacySection(Component component) {
+        return LegacyComponentSerializer.legacySection().serialize(component);
+    }
+
     static Component formatColoredValue(String value) {
         final boolean containsLegacyFormattingCharacter = value.indexOf(LegacyComponentSerializer.AMPERSAND_CHAR) != -1
                 || value.indexOf(LegacyComponentSerializer.SECTION_CHAR) != -1;
