@@ -12,7 +12,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <adventure.version>4.17.0</adventure.version>
+        <kyori.version>4.17.0</kyori.version>
     </properties>
 
     <dependencies>
@@ -20,7 +20,21 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-api</artifactId>
-            <version>${adventure.version}</version>
+            <version>${kyori.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.kyori/adventure-text-serializer-legacy -->
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-serializer-legacy</artifactId>
+            <version>${kyori.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.kyori/adventure-text-minimessage -->
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-minimessage</artifactId>
+            <version>${kyori.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.google.collect/com.google.collect -->
