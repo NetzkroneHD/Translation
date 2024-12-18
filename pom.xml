@@ -23,6 +23,14 @@
             <version>${adventure.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.google.collect/com.google.collect -->
+        <dependency>
+            <groupId>com.google.collections</groupId>
+            <artifactId>google-collections</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+
     </dependencies>
 
 </project>
