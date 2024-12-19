@@ -1,6 +1,5 @@
 package de.netzkronehd.translation;
 
-import de.netzkronehd.translation.args.Args;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.JoinConfiguration;
@@ -11,19 +10,17 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import java.util.Collection;
 import java.util.Iterator;
 
-import static net.kyori.adventure.text.Component.*;
+import static net.kyori.adventure.text.Component.join;
+import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public interface Message {
 
+
+
     static TextComponent toText(ComponentLike component) {
         return text().append(component).build();
     }
-
-    Args.Args0 NO_PERMISSION = () -> toText(translatable()
-            .key("")
-            .color(RED)
-    );
 
     static TextComponent formatBoolean(boolean bool) {
         return bool ? text("true", GREEN) : text("false", RED);

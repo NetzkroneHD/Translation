@@ -1,21 +1,30 @@
 package de.netzkronehd.translation.manager;
 
-import com.google.common.collect.Maps;
-import de.netzkronehd.translation.exception.UnknownLocaleException;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.translation.GlobalTranslator;
-import net.kyori.adventure.translation.TranslationRegistry;
-import net.kyori.adventure.translation.Translator;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
+
+import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.Nullable;
+
+import com.google.common.collect.Maps;
+
+import de.netzkronehd.translation.exception.UnknownLocaleException;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.translation.GlobalTranslator;
+import net.kyori.adventure.translation.TranslationRegistry;
+import net.kyori.adventure.translation.Translator;
 
 public class TranslationManager {
 
@@ -28,7 +37,6 @@ public class TranslationManager {
     public TranslationManager(String namespace, String value) {
         this.installed = ConcurrentHashMap.newKeySet();
         this.key = Key.key(namespace, value);
-        reload();
     }
 
     public void reload() {
@@ -100,6 +108,10 @@ public class TranslationManager {
         this.registry.registerAll(locale, bundle, false);
         this.installed.add(locale);
         return Maps.immutableEntry(locale, bundle);
+    }
+
+    public static Component render(Component component, @Nullable Locale locale) {
+        return GlobalTranslator.render(component, (locale == null ? DEFAULT_LOCALE:locale));
     }
 
     public static @Nullable Locale parseLocale(@Nullable String locale) {
