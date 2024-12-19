@@ -3,6 +3,7 @@ package de.netzkronehd.translation.sender;
 import java.util.UUID;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 
 public interface Sender {
 
@@ -12,6 +13,9 @@ public interface Sender {
     String CONSOLE_NAME = "Console";
 
     void sendMessage(Component message);
+    void performCommand(String command);
+    void showTitle(Title title);
+    void resetTitle();
 
     boolean hasPermission(String permission);
     boolean isConsole();

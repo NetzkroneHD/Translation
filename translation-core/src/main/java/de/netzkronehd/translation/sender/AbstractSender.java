@@ -1,6 +1,7 @@
 package de.netzkronehd.translation.sender;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 
 import java.util.UUID;
 
@@ -24,6 +25,21 @@ public class AbstractSender<T> implements Sender {
     @Override
     public void sendMessage(Component message) {
         this.factory.sendMessage(this.sender, message);
+    }
+
+    @Override
+    public void performCommand(String command) {
+        this.factory.performCommand(this.sender, command);
+    }
+
+    @Override
+    public void showTitle(Title title) {
+        this.factory.showTitle(this.sender, title);
+    }
+
+    @Override
+    public void resetTitle() {
+        this.factory.resetTitle(this.sender);
     }
 
     @Override
