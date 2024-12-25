@@ -1,18 +1,21 @@
 package de.netzkronehd.translation;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
-import net.kyori.adventure.text.JoinConfiguration;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.kyori.adventure.text.Component;
 import static net.kyori.adventure.text.Component.join;
 import static net.kyori.adventure.text.Component.text;
-import static net.kyori.adventure.text.format.NamedTextColor.*;
+import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.TextComponent;
+import static net.kyori.adventure.text.format.NamedTextColor.AQUA;
+import static net.kyori.adventure.text.format.NamedTextColor.DARK_AQUA;
+import static net.kyori.adventure.text.format.NamedTextColor.GRAY;
+import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
+import static net.kyori.adventure.text.format.NamedTextColor.RED;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public interface Message {
 
@@ -47,6 +50,7 @@ public interface Message {
     }
 
     static Component formatColoredValue(String value) {
+        if(value == null) return text().build();
         final boolean containsLegacyFormattingCharacter = value.indexOf(LegacyComponentSerializer.AMPERSAND_CHAR) != -1
                 || value.indexOf(LegacyComponentSerializer.SECTION_CHAR) != -1;
 
@@ -58,13 +62,23 @@ public interface Message {
         }
     }
 
-    static Component formatContext(String key, String value) {
+    static TextComponent formatContext(String key, String value) {
         // "&3{}&7=&b{}"
         return text()
                 .content(key)
                 .color(DARK_AQUA)
                 .append(text('=').color(GRAY))
                 .append(text(value, AQUA))
+                .build();
+    }
+
+    static Component formatContext(String key, Component value) {
+        // "&3{}&7=&b{}"
+        return text()
+                .content(key)
+                .color(DARK_AQUA)
+                .append(text('=').color(GRAY))
+                .append(value)
                 .build();
     }
 
