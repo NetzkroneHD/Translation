@@ -1,30 +1,23 @@
 package de.netzkronehd.translation.manager;
 
+import com.google.common.collect.Maps;
+import de.netzkronehd.translation.exception.UnknownLocaleException;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.translation.GlobalTranslator;
+import net.kyori.adventure.translation.TranslationRegistry;
+import net.kyori.adventure.translation.Translator;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
-
-import net.kyori.adventure.text.Component;
-import org.jetbrains.annotations.Nullable;
-
-import com.google.common.collect.Maps;
-
-import de.netzkronehd.translation.exception.UnknownLocaleException;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.translation.GlobalTranslator;
-import net.kyori.adventure.translation.TranslationRegistry;
-import net.kyori.adventure.translation.Translator;
 
 public class TranslationManager {
 
@@ -39,6 +32,11 @@ public class TranslationManager {
         this.key = Key.key(namespace, value);
     }
 
+    public TranslationManager(Key key) {
+        this.installed = ConcurrentHashMap.newKeySet();
+        this.key = key;
+    }
+
     public void reload() {
         if (this.registry != null) {
             GlobalTranslator.translator().removeSource(this.registry);
@@ -46,6 +44,7 @@ public class TranslationManager {
         }
         this.registry = TranslationRegistry.create(this.key);
         this.registry.defaultLocale(DEFAULT_LOCALE);
+        GlobalTranslator.translator().addSource(registry);
     }
 
     public Set<Locale> getInstalled() {
@@ -61,24 +60,23 @@ public class TranslationManager {
     }
 
     public void loadFromFileSystem(Path directory) throws IOException, UnknownLocaleException {
+        loadFromFileSystem(directory, (path) -> {});
+    }
+
+    public void loadFromFileSystem(Path directory, Consumer<Path> fileCallback) throws IOException, UnknownLocaleException {
         final List<Path> translationFiles;
 
         try (Stream<Path> stream = Files.list(directory)) {
             translationFiles = stream.filter(TranslationManager::isTranslationFile).toList();
         }
-
-        final Map<Locale, ResourceBundle> loaded = new HashMap<>();
         for (Path translationFile : translationFiles) {
-            final Map.Entry<Locale, ResourceBundle> result = loadTranslationFile(translationFile);
-            loaded.put(result.getKey(), result.getValue());
-        }
-
-        loaded.forEach((locale, bundle) -> {
-            final Locale localeWithoutCountry = new Locale(locale.getLanguage());
-            if (!locale.equals(localeWithoutCountry) && !localeWithoutCountry.equals(DEFAULT_LOCALE) && this.installed.add(localeWithoutCountry)) {
-                this.registry.registerAll(localeWithoutCountry, bundle, false);
+            Locale locale = parseLocale(translationFile.getFileName().toString());
+            if (locale == null) {
+                throw new UnknownLocaleException("Unknown locale '" + translationFile.getFileName().toString() + "' - unable to register.");
             }
-        });
+            fileCallback.accept(translationFile);
+            this.registry.registerAll(locale, translationFile, false);
+        }
     }
 
     public void registerTranslationFile(Path translationFile) throws IOException, UnknownLocaleException {
