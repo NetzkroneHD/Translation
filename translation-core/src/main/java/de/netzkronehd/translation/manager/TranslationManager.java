@@ -24,22 +24,18 @@ public class TranslationManager {
 
     private final Set<Locale> installed;
     private final Key key;
-    private MiniMessageTranslationStore translationStore;
+    private final MiniMessageTranslationStore store;
 
     public TranslationManager(Key key) {
         this.installed = ConcurrentHashMap.newKeySet();
         this.key = key;
+        this.store = MiniMessageTranslationStore.create(key);
+        this.store.defaultLocale(DEFAULT_LOCALE);
     }
 
-    public MiniMessageTranslationStore registerStoreInGlobalTranslator() {
-        if (this.translationStore != null) {
-            GlobalTranslator.translator().removeSource(translationStore);
-            this.installed.clear();
-        }
-        this.translationStore = MiniMessageTranslationStore.create(key);
-        this.translationStore.defaultLocale(DEFAULT_LOCALE);
-        GlobalTranslator.translator().addSource(translationStore);
-        return translationStore;
+    public boolean registerStoreInGlobalTranslator() {
+        GlobalTranslator.translator().removeSource(store);
+        return GlobalTranslator.translator().addSource(store);
     }
 
     public void loadFromFileSystem(Path directory) throws IOException, UnknownLocaleException {
@@ -62,9 +58,10 @@ public class TranslationManager {
         loaded.forEach((locale, bundle) -> {
             final Locale localeWithoutCountry = Locale.of(locale.getLanguage());
             if (!locale.equals(localeWithoutCountry) && !localeWithoutCountry.equals(DEFAULT_LOCALE) && this.installed.add(localeWithoutCountry)) {
-                this.translationStore.registerAll(localeWithoutCountry, bundle, false);
+                this.store.registerAll(localeWithoutCountry, bundle, false);
             }
         });
+        registerStoreInGlobalTranslator();
     }
 
     public Map.Entry<Locale, ResourceBundle> loadTranslationFile(Path translationFile) throws IOException, UnknownLocaleException {
@@ -78,7 +75,7 @@ public class TranslationManager {
             bundle = new PropertyResourceBundle(reader);
         }
 
-        this.translationStore.registerAll(locale, bundle, false);
+        this.store.registerAll(locale, bundle, false);
         this.installed.add(locale);
         return new AbstractMap.SimpleImmutableEntry<>(locale, bundle);
     }
@@ -91,8 +88,8 @@ public class TranslationManager {
         return key;
     }
 
-    public MiniMessageTranslationStore getTranslationStore() {
-        return translationStore;
+    public MiniMessageTranslationStore getStore() {
+        return store;
     }
 
     public static Component render(Component component, @Nullable Locale locale) {
