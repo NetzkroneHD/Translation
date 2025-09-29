@@ -86,6 +86,7 @@
                                     <artifact>*:*</artifact>
                                     <includes>
                                         <include>de/netzkronehd/testtranslationplugin/**</include>
+                                        <include>*.yml</include>
                                     </includes>
                                 </filter>
                             </filters>
