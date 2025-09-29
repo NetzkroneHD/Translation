@@ -24,6 +24,7 @@
         <module>translation-spigot</module>
         <module>translation-velocity</module>
         <module>translation-sponge</module>
+        <module>translation-test-plugin</module>
     </modules>
 
     <dependencies>
