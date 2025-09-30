@@ -2,4 +2,11 @@ name: translation-test-plugin
 version: '1.0-SNAPSHOT'
 main: de.netzkronehd.testtranslationplugin.TranslationPlugin
 api-version: '1.20'
-authors: [NetzkroneHD]
+authors: [ NetzkroneHD ]
+
+commands:
+  testtranslation:
+    description: A command to test translations.
+    usage: /<command>
+    permission: translationtest.use
+    permission-message: You do not have permission to use this command.

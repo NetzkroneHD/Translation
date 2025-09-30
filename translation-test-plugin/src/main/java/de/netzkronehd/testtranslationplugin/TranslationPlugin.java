@@ -22,7 +22,7 @@ public final class TranslationPlugin extends JavaPlugin {
             throw new RuntimeException(e);
         }
 
-        getServer().getPluginManager().registerEvents(new JoinListener(), this);
+        getCommand("testtranslation").setExecutor(new TranslateCommand());
 
         getLogger().info("Translation plugin enabled");
     }
