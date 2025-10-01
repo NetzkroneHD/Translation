@@ -6,7 +6,7 @@
 
     <groupId>de.netzkronehd.translation</groupId>
     <artifactId>translation-test-plugin</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>translation-test-plugin</name>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>de.netzkronehd.translation</groupId>
             <artifactId>translation-spigot</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

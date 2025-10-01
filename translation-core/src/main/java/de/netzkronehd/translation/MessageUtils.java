@@ -43,6 +43,10 @@ public interface MessageUtils {
         return LegacyComponentSerializer.legacySection().serialize(component);
     }
 
+    static String serializeMiniMessage(Component component) {
+        return MiniMessage.miniMessage().serialize(component);
+    }
+
     static Component formatColoredValue(String value) {
         if(value == null) return text().build();
         final boolean containsLegacyFormattingCharacter = value.indexOf(LegacyComponentSerializer.AMPERSAND_CHAR) != -1
