@@ -16,18 +16,19 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TranslationManager {
 
     public static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
 
-    private final Set<Locale> installed;
+    private final Map<Locale, Set<String>> installed;
     private final Key key;
     private final MiniMessageTranslationStore store;
 
     public TranslationManager(Key key) {
-        this.installed = ConcurrentHashMap.newKeySet();
+        this.installed = new ConcurrentHashMap<>();
         this.key = key;
         this.store = MiniMessageTranslationStore.create(key);
         this.store.defaultLocale(DEFAULT_LOCALE);
@@ -57,7 +58,7 @@ public class TranslationManager {
         }
         loaded.forEach((locale, bundle) -> {
             final Locale localeWithoutCountry = Locale.of(locale.getLanguage());
-            if (!locale.equals(localeWithoutCountry) && !localeWithoutCountry.equals(DEFAULT_LOCALE) && this.installed.add(localeWithoutCountry)) {
+            if (!locale.equals(localeWithoutCountry) && !localeWithoutCountry.equals(DEFAULT_LOCALE) && !this.installed.containsKey(localeWithoutCountry)) {
                 this.store.registerAll(localeWithoutCountry, bundle, false);
             }
         });
@@ -76,12 +77,35 @@ public class TranslationManager {
         }
 
         this.store.registerAll(locale, bundle, false);
-        this.installed.add(locale);
+        this.installed.put(locale, bundle.keySet());
         return new AbstractMap.SimpleImmutableEntry<>(locale, bundle);
     }
 
-    public Set<Locale> getInstalled() {
-        return installed;
+    public boolean unregister(String key) {
+        for (Set<String> keys : this.installed.values()) {
+            if (keys.remove(key)) {
+                this.store.unregister(key);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void unregisterAll() {
+        this.installed.values().stream()
+                .flatMap(Collection::stream)
+                .forEach(this.store::unregister);
+        this.installed.clear();
+    }
+
+    public Set<String> getAllKeys() {
+        return installed.values().stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    public Map<Locale, Set<String>> getInstalled() {
+        return Collections.unmodifiableMap(installed);
     }
 
     public Key getKey() {
