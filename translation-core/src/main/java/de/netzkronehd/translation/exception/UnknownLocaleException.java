@@ -6,7 +6,4 @@ public class UnknownLocaleException extends Exception {
         super(message);
     }
 
-    public UnknownLocaleException(Throwable cause) {
-        super(cause);
-    }
 }

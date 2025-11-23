@@ -13,7 +13,7 @@
     <artifactId>translation-bungee</artifactId>
 
     <properties>
-        <bungee.version>1.21-R0.1-SNAPSHOT</bungee.version>
+        <bungee.version>1.21-R0.4</bungee.version>
         <kyori-bungeecord.version>4.3.4</kyori-bungeecord.version>
     </properties>
 
