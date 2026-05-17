@@ -7,14 +7,14 @@
     <parent>
         <groupId>de.netzkronehd.translation</groupId>
         <artifactId>translation</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
     </parent>
 
     <artifactId>translation-spigot</artifactId>
 
     <properties>
         <spigot.version>1.21.4-R0.1-SNAPSHOT</spigot.version>
-        <kyori-bukkit.version>4.3.4</kyori-bukkit.version>
+        <kyori-bukkit.version>4.4.1</kyori-bukkit.version>
     </properties>
 
 

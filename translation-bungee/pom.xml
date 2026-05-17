@@ -7,14 +7,14 @@
     <parent>
         <groupId>de.netzkronehd.translation</groupId>
         <artifactId>translation</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
     </parent>
 
     <artifactId>translation-bungee</artifactId>
 
     <properties>
         <bungee.version>1.21-R0.4</bungee.version>
-        <kyori-bungeecord.version>4.3.4</kyori-bungeecord.version>
+        <kyori-bungeecord.version>4.4.1</kyori-bungeecord.version>
     </properties>
 
     <repositories>
